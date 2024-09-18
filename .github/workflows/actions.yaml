@@ -34,7 +34,6 @@ jobs:
       - name: "Docker auth"
         run: |-
               gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
-      - name:
 
       # Build and push Order Service Docker image
       - name: Build and Push Order Service Docker image
