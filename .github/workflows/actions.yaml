@@ -39,7 +39,6 @@ jobs:
           docker build -t gcr.io/$PROJECT_ID/order-service:latest .
           docker push gcr.io/$PROJECT_ID/order-service:latest
 
-
       # # Set up kubectl to interact with the GKE cluster
       # - name: Set up kubectl
       #   run: |
