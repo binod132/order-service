@@ -36,8 +36,8 @@ jobs:
       # Build and push Order Service Docker image
       - name: Build and Push Order Service Docker image
         run: | 
-          docker build -t us-west1-docker.pkg.dev/$PROJECT_ID/microservice/order-service:latest .
-          docker push us-west1-docker.pkg.dev/$PROJECT_ID/microservice/order-service:latest
+          docker build -t us-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/microservice/order-service:latest .
+          docker push us-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/microservice/order-service:latest
       # # Set up kubectl to interact with the GKE cluster
       # - name: Set up kubectl
       #   run: |
