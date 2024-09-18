@@ -1,0 +1,60 @@
+name: CI/CD for Microservices
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER_NAME }}
+  GKE_ZONE: ${{ secrets.GKE_CLUSTER_ZONE }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Google Cloud SDK
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GCR_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
+
+      # Configure Docker to use Google Container Registry (GCR)
+      - name: Configure Docker for GCR
+        run: |
+          echo "Logging in to GCR..."
+          gcloud auth configure-docker
+
+      # Build and push Order Service Docker image
+      - name: Build and Push Order Service Docker image
+        run: |
+          docker build -t gcr.io/$PROJECT_ID/order-service:latest .
+          docker push gcr.io/$PROJECT_ID/order-service:latest
+
+      # # Set up kubectl to interact with the GKE cluster
+      # - name: Set up kubectl
+      #   run: |
+      #     gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
+
+      # # Apply Kubernetes manifests for User Service
+      # - name: Deploy User Service
+      #   run: |
+      #     kubectl apply -f k8s/user-service.yaml
+
+      # # Apply Kubernetes manifests for Order Service
+      # - name: Deploy Order Service
+      #   run: |
+      #     kubectl apply -f k8s/order-service.yaml
+
+      # # Apply Kubernetes manifests for Payment Service
+      # - name: Deploy Payment Service
+      #   run: |
+      #     kubectl apply -f k8s/payment-service.yaml
