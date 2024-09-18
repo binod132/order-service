@@ -9,7 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER_NAME }}
   GKE_ZONE: ${{ secrets.GKE_CLUSTER_ZONE }}
-  REGION: ${{ secrets.GKE_CLUSTER_ZONE }}
+  REGION: $REGION
 
 jobs:
   build-and-deploy:
