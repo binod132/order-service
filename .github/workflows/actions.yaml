@@ -31,7 +31,7 @@ jobs:
       - name: Configure Docker for GCR
         run: |
           echo "Logging in to GCR..."
-          gcloud auth configure-docker
+          gcloud auth configure-docker us-docker.pkg.dev
 
       # Build and push Order Service Docker image
       - name: Build and Push Order Service Docker image
