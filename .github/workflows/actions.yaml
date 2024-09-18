@@ -9,6 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER_NAME }}
   GKE_ZONE: ${{ secrets.GKE_CLUSTER_ZONE }}
+  REGION: ${{ secrets.GKE_CLUSTER_ZONE }}
 
 jobs:
   build-and-deploy:
@@ -32,13 +33,13 @@ jobs:
 
       - name: "Docker auth"
         run: |-
-              gcloud auth configure-docker us-docker.pkg.dev --quiet
+              gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
       # Build and push Order Service Docker image
       - name: Build and Push Order Service Docker image
-        run: | 
-          docker build -t us-docker.pkg.dev/brave-smile-424210-m0/train/order-service:latest .
-          docker push us-docker.pkg.dev/brave-smile-424210-m0/train/order-service:latest
+        run: |  
+          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/microservice/order-service:latest .
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/microservice/order-service:latest
       # # Set up kubectl to interact with the GKE cluster
       # - name: Set up kubectl
       #   run: |
