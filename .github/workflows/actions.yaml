@@ -17,21 +17,22 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      # Set up Google Cloud SDK
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      - id: "auth"
+        uses: "google-github-actions/auth@v1"
         with:
-          service_account_key: ${{ secrets.GCR_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          export_default_credentials: true
+          credentials_json: ${{ secrets.GCR_SA_KEY }}
 
-      # Configure Docker to use Google Container Registry (GCR)
-      - name: Configure Docker for GCR
-        run: |
-          echo "Logging in to GCR..."
-          gcloud auth configure-docker us-docker.pkg.dev
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
+
+      - name: "Docker auth"
+        run: |-
+              gcloud auth configure-docker us-docker.pkg.dev --quiet
 
       # Build and push Order Service Docker image
       - name: Build and Push Order Service Docker image
