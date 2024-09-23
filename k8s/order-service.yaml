@@ -98,3 +98,20 @@ kind: ServiceAccount
 metadata:
   name: order-service-sa
   namespace: default
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: order-service-monitor
+  namespace: monitoring  # or the namespace where Prometheus is running
+spec:
+  selector:
+    matchLabels:
+      app: order-service
+  namespaceSelector:
+    matchNames:
+      - default  # The namespace where your service is located
+  endpoints:
+    - port: metrics  # Must match the port name in the Service
+      path: /metrics
+
