@@ -1,16 +1,26 @@
 from flask import Flask, jsonify, request
+from prometheus_client import Counter, start_http_server
 import requests
 
+# Create a Prometheus counter for HTTP requests
+http_requests_total = Counter('http_requests_total', 'Total HTTP Requests', ['method', 'endpoint'])
+
+
 app = Flask(__name__)
+
+# Expose Prometheus metrics on port 9100
+start_http_server(9100)
 
 orders = []
 
 @app.route('/orders', methods=['GET'])
 def get_orders():
+    http_requests_total.labels(method='GET', endpoint='/orders').inc()  # Increment Prometheus counter
     return jsonify(orders)
 
 @app.route('/orders', methods=['POST'])
 def create_order():
+    http_requests_total.labels(method='POST', endpoint='/orders').inc()  # Increment Prometheus counter
     user_id = request.json.get('user_id')
     
     # Use FQDN for the user-service in the same namespace
