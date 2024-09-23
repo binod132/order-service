@@ -60,13 +60,16 @@ metadata:
     prometheus.io/port: "9100"
     prometheus.io/path: "/metrics"
 spec:
+  type: ClusterIP
   selector:
     app: order-service
   ports:
-    - protocol: TCP
+    - name: http  # Name for the HTTP port
+      protocol: TCP
       port: 5000  # App port
       targetPort: 5000
-    - protocol: TCP
+    - name: metrics  # Name for the metrics port
+      protocol: TCP
       port: 9100  # Prometheus metrics port
       targetPort: 9100
 
