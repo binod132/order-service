@@ -12,7 +12,9 @@ def get_orders():
 @app.route('/orders', methods=['POST'])
 def create_order():
     user_id = request.json.get('user_id')
-    user_response = requests.get(f'http://user-service:5000/users/{user_id}')
+    
+    # Use FQDN for the user-service in the same namespace
+    user_response = requests.get(f'http://user-service.default.svc.cluster.local:5000/users/{user_id}')
     
     if user_response.status_code != 200:
         return jsonify({'error': 'User not found'}), 404
